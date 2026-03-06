@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="hi"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧠 MindMap Studio Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Nunito:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  
+  <link rel="icon" href="https://i.pinimg.com/736x/28/ee/1e/28ee1ef707b6d762a9815138328719f1.jpg">
+<link rel="stylesheet" href="style.css"></head>
+
+<body>
+
+  <div id="loadBar"></div>
+
+  <!-- ═══════ TOP BAR ═══════ -->
+  <div id="topbar">
+    <div class="logo">🧠 MindMap</div>
+    <div class="logo-dot"></div>
+    <div class="vdiv"></div>
+
+    <button class="btn" id="focusBtn" onclick="toggleFocus()" title="Focus Mode">
+      🎯 Focus
+    </button>
+
+    <div class="vdiv"></div>
+
+    <!-- Zoom cluster -->
+    <div class="zoom-cluster">
+      <button class="btn icon-only" onclick="zoom(-0.15)" title="Zoom Out (-)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21-4.35-4.35M8 11h6"></path>
+        </svg>
+      </button>
+      <div id="zoomLabel">100%</div>
+      <button class="btn icon-only" onclick="zoom(0.15)" title="Zoom In (+)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21-4.35-4.35M11 8v6M8 11h6"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="vdiv"></div>
+
+    <!-- View actions -->
+    <div class="btn-group">
+      <button class="btn icon-only" onclick="fitToScreen()" title="Fit Screen (F)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
+      <button class="btn icon-only" onclick="resetView()" title="Reset View (R)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+      </button>
+      <button class="btn icon-only" onclick="rotateImg()" title="Rotate 90° (T)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 2v6h-6"></path>
+          <path d="M21 13a9 9 0 1 1-3-7.7L21 8"></path>
+        </svg>
+      </button>
+      <button class="btn icon-only" onclick="flipH()" title="Flip Horizontal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3"></path>
+          <path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"></path>
+          <line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="3 2"></line>
+        </svg>
+      </button>
+      <button class="btn icon-only" onclick="flipV()" title="Flip Vertical">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"></path>
+          <path d="M21 16v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path>
+          <line x1="2" y1="12" x2="22" y2="12" stroke-dasharray="3 2"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="vdiv"></div>
+
+    <button class="btn" id="gridBtn" onclick="toggleGrid()" title="Grid (G)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+        <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+        <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+        <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+      </svg>
+      Grid
+    </button>
+    <button class="btn" id="mmBtn" onclick="toggleMinimap()" title="Minimap (M)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 7l6-4 6 4 6-4v14l-6 4-6-4-6 4V7z"></path>
+        <path d="M9 3v14M15 7v14"></path>
+      </svg>
+      Map
+    </button>
+    <button class="btn" id="xhBtn" onclick="toggleCrosshair()" title="Crosshair (X)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="1"></circle>
+        <path d="M12 2v4m0 12v4M2 12h4m12 0h4"></path>
+      </svg>
+      Aim
+    </button>
+    <button class="btn" id="adjBtn" onclick="togglePanel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="8" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="16" y2="18"></line>
+        <circle cx="4" cy="6" r="2" fill="currentColor" opacity=".4"></circle>
+        <circle cx="20" cy="12" r="2"></circle>
+        <circle cx="16" cy="18" r="2" fill="currentColor" opacity=".4"></circle>
+      </svg>
+      Adjust
+    </button>
+
+    <div class="spacer"></div>
+    <span id="filenameBar"></span>
+
+    <button class="btn" onclick="downloadSnap()" title="Save Snapshot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" x2="12" y1="15" y2="3"></line>
+      </svg>
+      Save
+    </button>
+    <button class="btn" id="fsBtn" style="display:none" onclick="toggleFS()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+      </svg>
+      Full
+    </button>
+    <button class="btn" id="settBtn" onclick="toggleSettings()" title="Settings (S)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+      Settings
+    </button>
+    <button class="btn" onclick="toggleShortcuts()" title="Keyboard Shortcuts (?)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect width="18" height="11" x="3" y="11" rx="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      Keys
+    </button>
+    <button class="btn danger" id="clearBtn" style="display:none" onclick="clearImg()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+      </svg>
+      Clear
+    </button>
+  </div>
+
+  <!-- ═══════ VIEWPORT ═══════ -->
+  <div id="viewport">
+    <div id="canvas">
+      <div id="imgWrapper"><img id="mapImage" src="" alt="Mind Map" draggable="false"></div>
+      <div id="gridOverlay"></div>
+      <div id="crosshair"></div>
+    </div>
+
+    <div id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="drop-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+          <defs>
+            <linearGradient id="gUp" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f0a500"></stop>
+              <stop offset="100%" stop-color="#3dd6f5"></stop>
+            </linearGradient>
+          </defs>
+          <path stroke="url(#gUp)" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline stroke="url(#gUp)" points="17 8 12 3 7 8"></polyline>
+          <line stroke="url(#gUp)" x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+      </div>
+      <div class="drop-title">MIND MAP DROP ZONE</div>
+      <div class="drop-sub">PNG, JPG, WEBP ya koi bhi image — Drag karein ya click karein!</div>
+      <button class="drop-cta" onclick="event.stopPropagation();document.getElementById('fileInput').click()">📂 Image
+        Choose Karein</button>
+      <div class="feature-pills">
+        <span class="pill">🎯 Focus Mode</span>
+        <span class="pill">🔍 Zoom</span>
+        <span class="pill">✋ Pan</span>
+        <span class="pill">🖥️ Fullscreen</span>
+        <span class="pill">🔄 Rotate</span>
+        <span class="pill">↔ Flip H/V</span>
+        <span class="pill">🗺️ Minimap</span>
+        <span class="pill">🎨 10 Filters</span>
+        <span class="pill">➕ Crosshair</span>
+        <span class="pill">📐 Grid</span>
+        <span class="pill">⚙️ Settings</span>
+        <span class="pill">💾 Snapshot</span>
+        <span class="pill">🎭 Page Themes</span>
+        <span class="pill">🖌️ Accent Colors</span>
+      </div>
+    </div>
+  </div>
+
+  <button id="exitFocusBtn" onclick="toggleFocus()">🚫 Exit Focus Mode (Esc)</button>
+
+  <!-- ═══════ ADJUST PANEL (TABBED) ═══════ -->
+  <div id="adjustPanel">
+    <div class="panel-tabs">
+      <button class="ptab active" id="tab-filters" onclick="switchTab('filters')">Filters</button>
+      <button class="ptab" id="tab-themes" onclick="switchTab('themes')">Themes</button>
+      <button class="ptab" id="tab-view" onclick="switchTab('view')">View</button>
+      <button class="ptab" id="tab-info" onclick="switchTab('info')">Info</button>
+    </div>
+
+    <!-- FILTERS TAB -->
+    <div class="tab-content active" id="tc-filters">
+      <div class="psec">
+        <div class="psec-label">Light &amp; Contrast</div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Brightness</span><span class="slider-val" id="brtV">100%</span>
+          </div>
+          <input type="range" id="brt" min="20" max="250" value="100" oninput="applyF()">
+        </div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Contrast</span><span class="slider-val" id="conV">100%</span>
+          </div>
+          <input type="range" id="con" min="20" max="250" value="100" oninput="applyF()">
+        </div>
+      </div>
+      <div class="psec">
+        <div class="psec-label">Color Tone</div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Saturation</span><span class="slider-val" id="satV">100%</span>
+          </div>
+          <input type="range" id="sat" min="0" max="300" value="100" oninput="applyF()">
+        </div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Hue Rotate</span><span class="slider-val" id="hueV">0°</span>
+          </div>
+          <input type="range" id="hue" min="0" max="360" value="0" oninput="applyF()">
+        </div>
+      </div>
+      <div class="psec">
+        <div class="psec-label">Effects</div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Blur</span><span class="slider-val" id="blrV">0px</span></div>
+          <input type="range" id="blr" min="0" max="10" value="0" step="0.5" oninput="applyF()">
+        </div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Sharpness</span><span class="slider-val" id="shrpV">0</span>
+          </div>
+          <input type="range" id="shrp" min="0" max="5" value="0" step="0.5" oninput="applyF()">
+        </div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Opacity</span><span class="slider-val" id="opV">100%</span>
+          </div>
+          <input type="range" id="op" min="10" max="100" value="100" oninput="applyF()">
+        </div>
+      </div>
+      <div class="psec">
+        <div class="psec-label">Shadow</div>
+        <div class="slider-row">
+          <div class="sl-header"><span class="sl-label">Drop Shadow</span><span class="slider-val" id="shadowV">60%</span></div>
+          <input type="range" id="shadowR" min="0" max="100" value="60" oninput="applyShad()">
+        </div>
+      </div>
+      <button class="panel-btn primary" onclick="autoEnhance()">✨ Auto Enhance</button>
+      <button class="panel-btn" onclick="resetF()" style="margin-top:4px">↺ Reset All Filters</button>
+    </div>
+
+    <!-- THEMES TAB -->
+    <div class="tab-content" id="tc-themes">
+      <div class="psec">
+        <div class="psec-label">Image Theme</div>
+        <div class="tgrid" id="imgThemeGrid">
+          <button class="tgbtn on" onclick="applyTheme('normal')">🎨 Normal</button>
+          <button class="tgbtn" onclick="applyTheme('invert')">🌓 Invert</button>
+          <button class="tgbtn" onclick="applyTheme('sepia')">🟤 Sepia</button>
+          <button class="tgbtn" onclick="applyTheme('grayscale')">⬜ Grayscale</button>
+          <button class="tgbtn" onclick="applyTheme('warm')">🌅 Warm</button>
+          <button class="tgbtn" onclick="applyTheme('cool')">❄️ Cool</button>
+          <button class="tgbtn" onclick="applyTheme('vivid')">⚡ Vivid</button>
+          <button class="tgbtn" onclick="applyTheme('neon')">🟣 Neon</button>
+          <button class="tgbtn" onclick="applyTheme('vintage')">📷 Vintage</button>
+          <button class="tgbtn" onclick="applyTheme('midnight')">🌙 Midnight</button>
+        </div>
+      </div>
+
+      <div class="psec">
+        <div class="psec-label">Page Background</div>
+        <div class="swatch-grid">
+          <div class="swatch-item">
+            <div class="swatch on" id="pgSw-default" style="background:#06090f;border:1px solid #333" onclick="setPageTheme('default','pgSw-default')" title="Default Dark"></div>
+            <span class="swatch-lbl">Dark</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="pgSw-navy" style="background:#0a1628" onclick="setPageTheme('navy','pgSw-navy')" title="Navy"></div>
+            <span class="swatch-lbl">Navy</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="pgSw-forest" style="background:#06120e" onclick="setPageTheme('forest','pgSw-forest')" title="Forest"></div>
+            <span class="swatch-lbl">Forest</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="pgSw-amoled" style="background:#000;border:1px solid #333" onclick="setPageTheme('amoled','pgSw-amoled')" title="AMOLED Black"></div>
+            <span class="swatch-lbl">AMOLED</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="pgSw-light" style="background:#f0f4f8;border:1px solid #cbd5e1" onclick="setPageTheme('light','pgSw-light')" title="Light Mode"></div>
+            <span class="swatch-lbl">Light</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="psec">
+        <div class="psec-label">Accent Color</div>
+        <div class="swatch-grid">
+          <div class="swatch-item">
+            <div class="swatch on" id="acSw-amber" style="background:#f0a500" onclick="setAccent('#f0a500','#3dd6f5','acSw-amber')" title="Amber"></div>
+            <span class="swatch-lbl">Amber</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="acSw-purple" style="background:#7c6bff" onclick="setAccent('#7c6bff','#ff6b9d','acSw-purple')" title="Purple"></div>
+            <span class="swatch-lbl">Purple</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="acSw-green" style="background:#34d399" onclick="setAccent('#34d399','#3dd6f5','acSw-green')" title="Emerald"></div>
+            <span class="swatch-lbl">Green</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="acSw-red" style="background:#f87171" onclick="setAccent('#f87171','#fbbf24','acSw-red')" title="Red"></div>
+            <span class="swatch-lbl">Red</span>
+          </div>
+          <div class="swatch-item">
+            <div class="swatch" id="acSw-blue" style="background:#3b82f6" onclick="setAccent('#3b82f6','#a78bfa','acSw-blue')" title="Blue"></div>
+            <span class="swatch-lbl">Blue</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW TAB -->
+    <div class="tab-content" id="tc-view">
+      <div class="psec">
+        <div class="psec-label">Quick Zoom</div>
+        <div class="tgrid">
+          <button class="tgbtn" onclick="zoomTo(0.25)">25%</button>
+          <button class="tgbtn" onclick="zoomTo(0.5)">50%</button>
+          <button class="tgbtn" onclick="zoomTo(0.75)">75%</button>
+          <button class="tgbtn" onclick="zoomTo(1)">100%</button>
+          <button class="tgbtn" onclick="zoomTo(1.5)">150%</button>
+          <button class="tgbtn" onclick="zoomTo(2)">200%</button>
+          <button class="tgbtn" onclick="zoomTo(3)">300%</button>
+          <button class="tgbtn" onclick="zoomTo(4)">400%</button>
+        </div>
+      </div>
+      <div class="psec">
+        <div class="psec-label">Transform</div>
+        <div class="tgrid">
+          <button class="tgbtn" onclick="fitToScreen()">📐 Fit Screen</button>
+          <button class="tgbtn" onclick="resetView()">↺ Reset View</button>
+          <button class="tgbtn" onclick="rotateImg()">🔄 Rotate 90°</button>
+          <button class="tgbtn" onclick="rotateBy(-90)">↩ Rotate -90°</button>
+          <button class="tgbtn" onclick="flipH()">↔ Flip H</button>
+          <button class="tgbtn" onclick="flipV()">↕ Flip V</button>
+        </div>
+      </div>
+      <div class="psec">
+        <div class="psec-label">Overlays</div>
+        <div class="tgrid">
+          <button class="tgbtn" id="vpGrid" onclick="toggleGrid()">📐 Grid</button>
+          <button class="tgbtn" id="vpMap" onclick="toggleMinimap()">🗺️ Minimap</button>
+          <button class="tgbtn" id="vpXH" onclick="toggleCrosshair()">➕ Crosshair</button>
+          <button class="tgbtn" onclick="toggleFS()">⛶ Fullscreen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO TAB -->
+    <div class="tab-content" id="tc-info">
+      <div class="psec">
+        <div class="psec-label">Image Info</div>
+        <div class="info-grid">
+          <div class="info-row"><span class="ik">Dimensions</span><span class="iv" id="infoDim">—</span></div>
+          <div class="info-row"><span class="ik">Format</span><span class="iv" id="infoFmt">—</span></div>
+          <div class="info-row"><span class="ik">File Size</span><span class="iv" id="infoFS">—</span></div>
+          <div class="info-row"><span class="ik">Filename</span><span class="iv" id="infoName" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span></div>
+        </div>
+      </div>
+      <div class="psec">
+        <div class="psec-label">View State</div>
+        <div class="info-grid">
+          <div class="info-row"><span class="ik">Zoom</span><span class="iv" id="infoZoom">100%</span></div>
+          <div class="info-row"><span class="ik">Rotation</span><span class="iv" id="infoRot">0°</span></div>
+          <div class="info-row"><span class="ik">Position X</span><span class="iv" id="infoPX">0</span></div>
+          <div class="info-row"><span class="ik">Position Y</span><span class="iv" id="infoPY">0</span></div>
+          <div class="info-row"><span class="ik">Flip</span><span class="iv" id="infoFlip">None</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:2px">
+        <button class="panel-btn primary" onclick="downloadSnap()">💾 Download Snapshot</button>
+        <button class="panel-btn" onclick="clearImg()" style="color:var(--red);border-color:rgba(248,113,113,0.25)">🗑️
+          Clear Image</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ MINIMAP ═══════ -->
+  <div id="minimap">
+    <div id="mmTag">MAP</div>
+    <img id="minimapImg" src="" alt="">
+    <div id="minimapVP"></div>
+  </div>
+
+  <!-- ═══════ STATUS BAR ═══════ -->
+  <div id="statusbar">
+    <div class="sdot"></div>
+    <div class="stat">Size: <span class="sv" id="imgSize">—</span></div>
+    <div class="stat">Fmt: <span class="sv" id="imgFmt">—</span></div>
+    <div class="stat">File: <span class="sv" id="imgFS">—</span></div>
+    <div class="stat">Rot: <span class="sv" id="rotD">0°</span></div>
+    <div class="stat">Zoom: <span class="sv" id="zoomStat">100%</span></div>
+    <span id="hintText">Scroll=Zoom • Drag=Pan • Dbl-click=Fit • Right-click=Menu</span>
+    <div id="coordDisplay">X: — &nbsp; Y: —</div>
+  </div>
+
+  <!-- ═══════ CONTEXT MENU ═══════ -->
+  <div id="ctxMenu">
+    <div class="ci" onclick="fitToScreen();closeCtx()">📐 Fit to Screen</div>
+    <div class="ci" onclick="resetView();closeCtx()">↺ Reset View</div>
+    <div class="ci" onclick="zoomTo(1);closeCtx()">🔍 Zoom 100%</div>
+    <div class="ci" onclick="zoomTo(2);closeCtx()">🔍 Zoom 200%</div>
+    <div class="cdiv"></div>
+    <div class="ci" onclick="rotateImg();closeCtx()">🔄 Rotate +90°</div>
+    <div class="ci" onclick="rotateBy(-90);closeCtx()">↩ Rotate −90°</div>
+    <div class="ci" onclick="flipH();closeCtx()">↔ Flip Horizontal</div>
+    <div class="ci" onclick="flipV();closeCtx()">↕ Flip Vertical</div>
+    <div class="cdiv"></div>
+    <div class="ci" onclick="toggleGrid();closeCtx()">📐 Toggle Grid</div>
+    <div class="ci" onclick="toggleMinimap();closeCtx()">🗺️ Toggle Minimap</div>
+    <div class="ci" onclick="downloadSnap();closeCtx()">💾 Save Snapshot</div>
+    <div class="cdiv"></div>
+    <div class="ci danger" onclick="clearImg();closeCtx()">🗑️ Clear Image</div>
+  </div>
+
+  <!-- ═══════ SETTINGS OVERLAY ═══════ -->
+  <div class="overlay" id="settingsOv" onclick="if(event.target===this)toggleSettings()">
+    <div class="modal" style="width:500px">
+      <div class="modal-title">
+        ⚙️ SETTINGS
+        <span class="modal-sub">— Features Enable / Disable</span>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">🖥️ Display Features</div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Status Bar</div>
+            <div class="toggle-desc">Bottom bar with image info &amp; coordinates</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-statusbar" checked="" onchange="toggleFeature('statusbar')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Coordinate Display</div>
+            <div class="toggle-desc">X/Y pixel coordinates on mouse hover</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-coords" checked="" onchange="toggleFeature('coords')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Hint Text</div>
+            <div class="toggle-desc">Control tips in status bar</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-hints" checked="" onchange="toggleFeature('hints')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Filename in Topbar</div>
+            <div class="toggle-desc">Show file name at top center</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-filename" checked="" onchange="toggleFeature('filename')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Ambient Background</div>
+            <div class="toggle-desc">Subtle gradient glow on background</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-ambientBG" checked="" onchange="toggleFeature('ambientBG')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">🎯 Interaction Features</div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Toast Notifications</div>
+            <div class="toggle-desc">Pop-up messages for actions</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-toast" checked="" onchange="toggleFeature('toast')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Zoom Indicator</div>
+            <div class="toggle-desc">Large center % shown while scrolling</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-zoomInd" checked="" onchange="toggleFeature('zoomInd')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Right-Click Context Menu</div>
+            <div class="toggle-desc">Popup menu on right click</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-ctxMenu" checked="" onchange="toggleFeature('ctxMenu')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Double-Click Fit</div>
+            <div class="toggle-desc">Fit to screen on double click</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-dblclick" checked="" onchange="toggleFeature('dblclick')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">🎨 Behavior</div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Auto-fit on Load</div>
+            <div class="toggle-desc">Automatically fit image when uploaded</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-autofit" checked="" onchange="toggleFeature('autofit')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Smooth Pan Animation</div>
+            <div class="toggle-desc">CSS transition on image movement</div>
+          </div>
+          <label class="toggle-sw">
+            <input type="checkbox" id="sw-smoothzoom" checked="" onchange="toggleFeature('smoothzoom')">
+            <div class="tstrack"></div>
+            <div class="tsthumb"></div>
+          </label>
+        </div>
+        <!-- History setting removed -->
+      </div>
+
+      <div style="text-align:center;margin-top:6px">
+        <button class="drop-cta" onclick="toggleSettings()" style="min-width:160px">✓ Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SHORTCUTS OVERLAY ═══════ -->
+  <div class="overlay" id="shortcutsOv" onclick="if(event.target===this)toggleShortcuts()">
+    <div class="modal">
+      <div class="modal-title">⌨️ KEYBOARD SHORTCUTS</div>
+      <div class="skr"><span>Zoom In / Out</span>
+        <div><span class="key">+</span><span class="key">−</span><span class="key">Scroll</span></div>
+      </div>
+      <div class="skr"><span>Fit to Screen</span><span class="key">F</span></div>
+      <div class="skr"><span>Reset View</span><span class="key">R</span></div>
+      <div class="skr"><span>Rotate 90°</span><span class="key">T</span></div>
+      <div class="skr"><span>Toggle Grid</span><span class="key">G</span></div>
+      <div class="skr"><span>Toggle Minimap</span><span class="key">M</span></div>
+      <div class="skr"><span>Toggle Focus</span><span class="key">Enter</span></div>
+      <div class="skr"><span>Toggle Crosshair</span><span class="key">X</span></div>
+      <div class="skr"><span>Settings</span><span class="key">S</span></div>
+      <div class="skr"><span>Zoom 100% / 200% / 300%</span>
+        <div><span class="key">1</span><span class="key">2</span><span class="key">3</span></div>
+      </div>
+      <div class="skr"><span>Pan Image</span><span class="key">← ↑ → ↓</span></div>
+      <div class="skr"><span>Full Screen</span><span class="key">F11</span></div>
+      <div class="skr"><span>This Help</span><span class="key">?</span></div>
+      <div class="skr"><span>Close / Escape</span><span class="key">Esc</span></div>
+      <div style="margin-top:14px;text-align:center">
+        <button class="drop-cta" onclick="toggleShortcuts()" style="min-width:160px">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="zoomInd"></div>
+  <div id="toast"></div>
+  <input type="file" id="fileInput" accept="image/*" onchange="handleFile(this.files[0])">
+
+  
+
+
+<script src="script.js" defer=""></script></body></html>
